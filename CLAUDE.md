@@ -5,10 +5,20 @@
 
 ## Project
 
-- **What this is:** <one line>
-- **Stack:** <languages / frameworks — generate `.claude/rules/stack/<tech>.md` per technology>
-- **Run / test / typecheck:** `<commands>`  (the hooks use these — keep them accurate)
+> FILL THIS IN — it's the only part you must edit. Replace each `<...>` below.
+
+- **What this is:** <one line describing the app>
+- **Stack:** <languages / frameworks — one `.claude/rules/stack/<tech>.md` gets generated per technology>
+- **Run / test / typecheck:** `<run cmd>` · `<test cmd>` · `<typecheck cmd>`  (hooks use these — keep accurate)
 - **Definition of done:** tests pass, typecheck clean, `/code-review` clean, validation strategy met.
+
+<!-- EXAMPLE of a filled-in Project section (delete this comment block once you've filled yours):
+- **What this is:** A finance tracker web app — users log expenses and see monthly summaries.
+- **Stack:** Next.js (TypeScript), Supabase (Postgres), Tailwind.
+- **Run / test / typecheck:** `npm run dev` · `npm test` · `npx tsc --noEmit`
+- **Definition of done:** tests pass, typecheck clean, /code-review clean, validation strategy met.
+-->
+
 
 ## Harness (how we work)
 

@@ -9,6 +9,9 @@ consistent SDLC workflow, early-firing hooks, specialist subagents, and a memory
 > hooks fire **as early as possible**, and verification is **validation-first**. On frontier models,
 > thin guides beat heavy guardrails — so nothing here hand-holds more than it must.
 
+> **New / not sure where to start? → [`GETTING-STARTED.md`](GETTING-STARTED.md)** (baby steps, no
+> setup knowledge assumed). The quickstart below is the short version.
+
 ## Quickstart (30 seconds)
 
 ```bash
