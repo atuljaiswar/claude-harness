@@ -1,0 +1,43 @@
+{
+  "$comment": "claude-harness settings. Hooks assume a POSIX shell (git bash on Windows). Tune commands per project. See .claude/hooks/ for the scripts.",
+  "permissions": {
+    "allow": [
+      "Bash(git status)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git branch:*)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(npm test:*)",
+      "Bash(npm run test:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx prettier:*)",
+      "Bash(pytest:*)",
+      "Bash(ruff:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh pr checks:*)",
+      "Bash(gh pr list:*)",
+      "Bash(codex --version)",
+      "Bash(codex doctor)",
+      "Bash(codex exec:*)",
+      "Bash(codex review:*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          { "type": "command", "command": "bash .claude/hooks/check.sh" }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          { "type": "command", "command": "bash .claude/hooks/session-context.sh" }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,4 @@
+.claude/rules/stack/*.md
+!.claude/rules/stack/README.md
+docs/
+prototype/
