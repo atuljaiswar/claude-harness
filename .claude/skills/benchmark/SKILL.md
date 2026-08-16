@@ -26,12 +26,16 @@ verification half of the NFR pass: `/nfr` writes the numbers, `/benchmark` measu
 7. If a target is missed, **name the bottleneck** (DB query, N+1, missing index, blocking I/O,
    single-instance limit) and hand it to `/plan` as the next ticket.
 
-## Exit criteria
+## What to report (advisory — never blocks)
+
+Performance is a **highlight, not a gate.** Correctness tests block the build; performance informs a
+decision. Report clearly and let the user choose to ship or optimize.
 
 - [ ] Every NFR performance target has a **measured result** (p95 + throughput + error rate)
-- [ ] p95 within target and error rate under threshold **at expected load**
-- [ ] Stress test run; **bottleneck identified** if any target is missed
-- [ ] Baseline saved for regression tracking
+- [ ] Baseline saved (`docs/perf-baseline.json`) for tracking over time
+- [ ] If any target is **missed**, do **not** block — instead **highlight it to the user**: the
+      measured vs target numbers, and the likely **bottleneck** (DB query, N+1, missing index,
+      blocking I/O, single-instance limit). Recommend a fix ticket; let the user decide.
 
 Perf is an **outcome** — measure the running system, not the code's intentions. Pairs with
-`/code-review` (which catches perf smells statically) and `/evals` (which holds the numbers over time).
+`/code-review` (perf smells, statically) and `/evals` (tracks the numbers over time, as a warning).

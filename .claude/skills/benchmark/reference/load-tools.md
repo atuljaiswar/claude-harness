@@ -27,7 +27,8 @@ export const options = {
 };
 ```
 
-k6 exits non-zero if a threshold fails — wire that into CI so a perf regression breaks the build.
+k6 exits non-zero if a threshold fails — capture that as a **warning/annotation** (surface it to the
+user), not a hard CI failure. Performance is advisory here; don't block the build or the PR on it.
 
 ## Notes
 

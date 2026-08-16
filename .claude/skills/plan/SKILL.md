@@ -20,7 +20,8 @@ Interview, research, then write a plan whose most important section is the **val
 edge cases, and the exact lint/typecheck/test/manual commands. Grade **outcomes, not paths**. Be
 specific about the *end* (what "done" and "validated" mean); let implementation build the road.
 If the ticket touches a hot path, include a **performance budget** (p95/throughput/error-rate from
-the NFR doc) as an exit criterion — verified with `/benchmark`.
+the NFR doc) as a target the build **reports on** — verified with `/benchmark` and *highlighted* (not
+blocked) if unmet.
 
 No code blocks in the plan — point at the live code. When confirmed, hand off to `/implement` in a
 **fresh conversation** (the plan is the only handoff artifact — avoids context rot).

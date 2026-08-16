@@ -13,5 +13,7 @@ suite once at the end. Then use `/code-review` to review the work, and commit to
   happens in `/code-review`, so implementation isn't overloaded.
 - Follow the plan's **validation strategy**; the work is done when those checks pass, not when it
   "looks right". Attach the receipts (test output).
-- If the plan has a **performance budget**, it's an exit criterion: run `/benchmark` and confirm
-  p95/throughput/error-rate meet the NFR targets before calling the ticket done.
+- If the plan has a **performance budget**, run `/benchmark` and report the numbers. If they miss
+  the NFR targets, **highlight it to the user** (measured vs target p95/throughput/error-rate + the
+  likely bottleneck) — do **not** block the ticket; the user decides whether to ship or optimize.
+  Correctness tests gate completion; performance is advisory.

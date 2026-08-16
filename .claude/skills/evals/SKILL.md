@@ -25,6 +25,7 @@ work by vibes. See `reference/eval-anatomy.md` for the vocabulary.
 Pick `pass@k` (one success suffices) vs `pass^k` (all trials must pass — reliability-critical).
 Don't select a model by benchmark alone — evaluate on *your* tasks (model vs product evals).
 
-**Performance regression:** treat the `/benchmark` baseline (`docs/perf-baseline.json`) as a
-regression eval — a run that regresses p95 latency or throughput past the NFR target fails, same as
-a broken test. Correctness *and* speed are held over time.
+**Performance watch (advisory):** track the `/benchmark` baseline (`docs/perf-baseline.json`) over
+time — a run that regresses p95 latency or throughput past the NFR target raises a **warning for the
+user**, it does **not** fail the build. Correctness evals gate; performance evals advise. Surface the
+regression with numbers; let the user decide.

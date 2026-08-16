@@ -25,8 +25,9 @@ Write `docs/non-functional-requirements.md` covering, **per feature**:
 - [ ] Observability defined before any "production-ready" claim
 - [ ] Token/context-budget compaction rule stated
 
-These targets aren't just documentation — they're graded. After the build, `/benchmark` measures the
-running system against the Performance/Scalability numbers here, and `/evals` holds them as a
-regression. Write targets concrete enough to measure (p95 latency, req/s, error-rate, concurrency).
+These targets aren't just documentation — they're measured. After the build, `/benchmark` runs the
+system against the Performance/Scalability numbers here and **flags** any miss to the user
+(advisory, not a gate); `/evals` tracks them as a warning over time. Write targets concrete enough to
+measure (p95 latency, req/s, error-rate, concurrency).
 
 Hand off to Phase 7: `/plan` → `/implement` → `/benchmark`.

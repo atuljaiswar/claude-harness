@@ -28,5 +28,6 @@
 - Manual / browser validation: <how a user would exercise it>
 - **Performance budget** (if this touches a hot path): p95 latency target `<Nms>`, throughput
   `<N req/s>`, error rate `<N%>` at expected load — pulled from `docs/non-functional-requirements.md`.
-  Verify with `/benchmark`; it's an **exit criterion**, not a nice-to-have.
+  Verify with `/benchmark`. **Advisory, not a gate:** if unmet, flag the numbers to the user — the
+  user decides whether to ship or optimize; it does not block completion.
 - Definition of done: <the outcome that must hold — graded, not vibes>
