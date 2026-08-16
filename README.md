@@ -9,22 +9,22 @@ consistent SDLC workflow, early-firing hooks, specialist subagents, and a memory
 > hooks fire **as early as possible**, and verification is **validation-first**. On frontier models,
 > thin guides beat heavy guardrails — so nothing here hand-holds more than it must.
 
-## Install into a project
+## Quickstart (30 seconds)
 
 ```bash
-# from your project root
-cp -r /path/to/claude-harness/.claude .
-cp /path/to/claude-harness/CLAUDE.md .        # then tailor the top section to the project
+# from the claude-harness folder
+./install.sh /path/to/your/project
 ```
+Then open the project in Claude Code:
+1. Edit `CLAUDE.md` → fill the **Project** section (stack + run/test/typecheck commands).
+2. `/prime` — load the codebase.
+3. `/sdlc` (full pipeline) **or** `/grill` → `/plan` → `/implement` (lightweight).
 
-Or point your coding agent at this folder and say: *"install this .claude harness into the current
-repo, then generate stack rules for <my stack>."*
+**Full detail:** [`INSTALL.md`](INSTALL.md) (prerequisites, Codex setup, verify) ·
+[`USAGE.md`](USAGE.md) (every command + worked examples).
 
-First run in a new project:
-1. `/prime` — load the codebase into context.
-2. Generate stack rules: ask the agent to run the `rules/stack/README.md` procedure (Context7 →
-   `rules/stack/<tech>.md`). Stack rules are **not** committed here — they're per-project.
-3. Start the loop below.
+Prefer to let the agent do it? Say: *"install the .claude harness from this folder into the current
+repo, then generate stack rules for my stack."*
 
 ## Two ways to work
 
