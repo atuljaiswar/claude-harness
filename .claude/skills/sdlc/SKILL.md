@@ -20,7 +20,7 @@ phase's exit criteria to move faster.
 | 4 Backend | `/backend-design` | `docs/04-backend.md` + sequence diagrams |
 | 5 Prototype | `/prototype` | `prototype/index.html` (throwaway) |
 | 6 NFR | `/nfr` | `docs/non-functional-requirements.md` |
-| 7 Build | `/plan` → `/implement` + `/codex-check` + security/researcher agents | code + tests |
+| 7 Build | `/plan` → `/implement` + `/codex-check` + `/benchmark` + security/researcher agents | code + tests + perf baseline |
 | 8 PR gate | `/pr-gate` | PR, reviewed, human-approved |
 | 9 Deploy | `/deploy` | `status: planned` (inactive) |
 

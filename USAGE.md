@@ -16,7 +16,8 @@ Two ways to work. Pick per task; they share the same skills.
 | `/code-review` | Fresh-context review + Fowler smells | After implementing |
 | `/codex-check` | Blind Codex black-box tests | Independent verification |
 | `/pr-gate` | PR + review + senior approval, no auto-merge | Before merge |
-| `/evals` | Stands up an outcome-graded eval suite | Want a regression net |
+| `/evals` | Stands up an outcome-graded eval suite (correctness + perf) | Want a regression net |
+| `/benchmark` | Load-tests the app vs the NFR perf/scale targets | Verify/enforce performance |
 | `/write-skill` | Author/prune a skill (deletion test) | Extending the harness |
 | `/retro` | Turn a failure into a rule/hook/test/skill | After a bug or bad run |
 | `/deploy` | Placeholder (planned-only) | Not active yet |

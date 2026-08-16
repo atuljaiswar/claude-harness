@@ -26,4 +26,7 @@
 - Edge cases: <empty/one/many, invalid/boundary, concurrency, failures, access-control>
 - Commands (exact): lint `<cmd>` · typecheck `<cmd>` · unit `<cmd>` · integration `<cmd>`
 - Manual / browser validation: <how a user would exercise it>
+- **Performance budget** (if this touches a hot path): p95 latency target `<Nms>`, throughput
+  `<N req/s>`, error rate `<N%>` at expected load — pulled from `docs/non-functional-requirements.md`.
+  Verify with `/benchmark`; it's an **exit criterion**, not a nice-to-have.
 - Definition of done: <the outcome that must hold — graded, not vibes>

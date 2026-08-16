@@ -61,7 +61,8 @@ locked into a pipeline. Use B for small changes, A when you want the full gated 
 | `skills/plan` | Per-ticket plan; **testing strategy first** | Validation-First Development |
 | `skills/implement` | Tiny: TDD at seams → typecheck → code-review → commit | Modular Skills |
 | `skills/code-review` | Two axes (standards + spec) + Fowler smells, fresh context | code-review, Leading Words |
-| `skills/evals` | Stand up an outcome-graded suite | AI Evals |
+| `skills/evals` | Stand up an outcome-graded suite (correctness + perf regression) | AI Evals |
+| `skills/benchmark` | Load-test the app against the NFR perf/scalability targets | NFR verification |
 | `skills/prime` | Load codebase context for the current ticket | Context Assembly |
 | `skills/write-skill` | Author/prune skills with the deletion test | Skill Authoring |
 | `skills/retro` | Harness-evolution loop: failure → infrastructure | Harness Engineering |

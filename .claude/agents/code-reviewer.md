@@ -14,5 +14,9 @@ Then sweep for refactoring smells (mysterious name, duplicated code, shotgun sur
 data clumps, primitive obsession, repeated switches, message chains, speculative generality) — name
 each; the name carries the fix.
 
+Then sweep for performance smells (N+1 queries, missing indexes, unbounded/over-fetching queries,
+missing pagination, blocking I/O on the hot path, chatty calls, missing caching/pooling). Flag any
+that could threaten an NFR performance target and recommend `/benchmark` to confirm impact.
+
 For each finding give `file:line`, the problem, and a concrete fix. Propose; don't rewrite silently.
 End with a verdict: block / approve-with-nits / approve — backed by what you actually checked.
