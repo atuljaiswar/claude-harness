@@ -1,4 +1,7 @@
 .claude/rules/stack/*.md
 !.claude/rules/stack/README.md
-docs/
-prototype/
+# Root-anchored: these are per-project throwaway/generated dirs at the repo root.
+# Without the leading slash, a bare `prototype/` also matched `.claude/skills/prototype/`
+# and silently dropped the prototype skill from the template.
+/docs/
+/prototype/

@@ -15,6 +15,10 @@ prompt — standards belong here, not in `CLAUDE.md`. Add project-specific rules
 - **Small, vertical changes** — end-to-end slices, reviewable in one pass.
 - **Tests describe behavior** — written against the spec, not retrofitted to the implementation.
 - **No secrets in code** — config/env only.
+- **Visual/structured references are HTML, not markdown** — anything whose value is visual (a design
+  system, an architecture diagram, a side-by-side option comparison) belongs in a self-contained
+  `.html` artifact both the agent *and* a human can render, not a wall of markdown. Prose references
+  stay markdown. (`/prototype` is the skill that emits these.)
 
 ## Where stack-specific rules go
 
