@@ -30,7 +30,7 @@ not assumed from the model.
   `docs/` artifacts + mermaid diagrams + `docs/progress-log.md`. Use for a whole project/greenfield.
 - **Lightweight modular** — trigger any skill in any order for smaller work:
   - Plan a feature: `/grill` → `/to-spec` → `/to-tickets`
-  - Build a ticket: `/prime` → `/plan` → `/tdd` (red→green→refactor, calls `/code-review`) → PR
+  - Build a ticket: `/prime` → `/plan` → `/implement` (test-first via `/tdd`, calls `/code-review`) → PR
   - Anytime: `/tdd`, `/evals`, `/write-skill`, `/retro`
 
 **SDLC docs layout** (created by the pipeline in the target repo): `docs/00-tooling-survey.md`,

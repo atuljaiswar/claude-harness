@@ -5,12 +5,11 @@ description: Implement the work described in a plan or ticket. Use in a fresh co
 
 # implement
 
-Implement the work described by the user in the plan/ticket. Use **TDD** where possible at
-pre-agreed seams. Run **type checking regularly** and single test files regularly; run the full
-suite once at the end. Then use `/code-review` to review the work, and commit to the current branch.
+Implement the work described by the user in the plan/ticket. Build it **test-first — run `/tdd`**
+(red→green→refactor, one vertical slice at a time; refactoring stays in `/code-review`, not the
+loop). Run **type checking regularly** and single test files regularly; run the full suite once at
+the end. Then use `/code-review` to review the work, and commit to the current branch.
 
-- **Red before green**, one vertical slice at a time. Refactoring is not part of the loop — it
-  happens in `/code-review`, so implementation isn't overloaded.
 - Follow the plan's **validation strategy**; the work is done when those checks pass, not when it
   "looks right". Attach the receipts (test output).
 - If the plan has a **performance budget**, run `/benchmark` and report the numbers. If they miss
