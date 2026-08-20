@@ -30,8 +30,8 @@ not assumed from the model.
   `docs/` artifacts + mermaid diagrams + `docs/progress-log.md`. Use for a whole project/greenfield.
 - **Lightweight modular** — trigger any skill in any order for smaller work:
   - Plan a feature: `/grill` → `/to-spec` → `/to-tickets`
-  - Build a ticket: `/prime` → `/plan` → `/implement` (calls `/code-review`) → review → PR
-  - Anytime: `/evals`, `/write-skill`, `/retro`
+  - Build a ticket: `/prime` → `/plan` → `/tdd` (red→green→refactor, calls `/code-review`) → PR
+  - Anytime: `/tdd`, `/evals`, `/write-skill`, `/retro`
 
 **SDLC docs layout** (created by the pipeline in the target repo): `docs/00-tooling-survey.md`,
 `docs/01-brd.md`, `docs/02-architecture.md`, `docs/adr/NNN-*.md`, `docs/03-database.md`,
@@ -45,7 +45,8 @@ merge. No auto-merge. Codex is **active** (`codex exec`, installed + authenticat
 
 **Non-negotiables (leading words):**
 - **Validation-first** — define the testing strategy *before* code. Grade **outcomes, not paths**.
-  Be specific about the *end*; let the model build the road.
+  Be specific about the *end*; let the model build the road. Implement it test-first via `/tdd`
+  (red before green, one slice at a time; the test is the spec the agent can't argue with).
 - **Spec, not code** — specs and plans contain no code blocks; they point at the live codebase.
 - **Vertical slice** — tickets are thin end-to-end features, never horizontal layers.
 - **Draft-and-confirm** — propose options + a recommendation and wait for confirmation; never grill
