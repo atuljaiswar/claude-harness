@@ -2,7 +2,7 @@
 
 Pulled in on demand — `/tdd` SKILL.md stays thin (progressive disclosure).
 
-## Which level
+## Which level?
 
 Default to unit. Choose the Playwright E2E variant per the six prioritization signals in
 [`../../rules/testing-doctrine.md` § Which level?](../../rules/testing-doctrine.md#which-level).
