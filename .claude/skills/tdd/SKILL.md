@@ -23,20 +23,28 @@ criteria: [`../../rules/testing-doctrine.md` § Which level?](../../rules/testin
 
 1. **Red** — write **one** test for the next thin behavior (a [vertical slice], not a whole layer).
    Run it. **Confirm it fails for the right reason** — an assertion failure, not an import/typo
-   error. A test that errors out proves nothing.
+   error. A test that errors out proves nothing. Then record the receipt:
+   `mkdir -p .claude/state && touch .claude/state/tdd-red`
 2. **Green** — write the **minimum** code to pass that test. Run the **whole** suite; nothing else
-   may break. Resist building beyond the current test.
+   may break. Resist building beyond the current test. Once the suite is green and the slice is
+   committed, clear the receipt: `rm -f .claude/state/tdd-red`
 3. **Refactor** — with the suite green, improve names/structure. Keep refactoring *small* here; hand
    structural smells to `/code-review` so the implement step stays focused on one slice.
 4. **Repeat** for the next slice. Commit at green (one logical slice per commit).
+
+## Enforcement
+
+The `test-first-gate` hook blocks impl edits until the red receipt exists; set `TDD_BYPASS=1` for
+legit non-TDD edits (config, docs, emergency, spikes). See `.claude/hooks/README.md`.
 
 ## The loop (E2E variant — Playwright)
 
 1. **Red** — write **one** failing Playwright test that drives the running app for the user-visible
    behavior. Confirm it fails on an **assertion**, not a boot/selector error — a selector miss proves
-   nothing about the behavior.
+   nothing about the behavior. Record the receipt: `mkdir -p .claude/state && touch .claude/state/tdd-red`
 2. **Green** — write the minimum code to pass; run the browser. **The browser run is the receipt** —
-   attach the trace or console output, not just "it passed".
+   attach the trace or console output, not just "it passed". Clear the receipt once green:
+   `rm -f .claude/state/tdd-red`
 3. **Refactor / graduate** — clean up; a kept E2E capability test graduates into `/evals` (same path
    as unit — a drop in its grade signals breakage).
 
