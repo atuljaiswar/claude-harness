@@ -13,7 +13,13 @@ its own work by vibes. This is **validation-first** made mechanical; pair it wit
 > Prerequisite: the testing strategy is already defined (from the plan/spec). If it isn't, stop and
 > define *how you'll validate* before touching code — that's the load-bearing decision.
 
-## The loop (one slice at a time)
+## Pick the level
+
+Default to unit. If the slice is a **user-facing flow** (navigation, form, auth redirect — something
+that crosses layers or requires a real browser), use the Playwright E2E variant below. Full decision
+criteria: [`../../rules/testing-doctrine.md` § Which level?](../../rules/testing-doctrine.md#which-level).
+
+## The loop (unit — one slice at a time)
 
 1. **Red** — write **one** test for the next thin behavior (a [vertical slice], not a whole layer).
    Run it. **Confirm it fails for the right reason** — an assertion failure, not an import/typo
@@ -23,6 +29,18 @@ its own work by vibes. This is **validation-first** made mechanical; pair it wit
 3. **Refactor** — with the suite green, improve names/structure. Keep refactoring *small* here; hand
    structural smells to `/code-review` so the implement step stays focused on one slice.
 4. **Repeat** for the next slice. Commit at green (one logical slice per commit).
+
+## The loop (E2E variant — Playwright)
+
+1. **Red** — write **one** failing Playwright test that drives the running app for the user-visible
+   behavior. Confirm it fails on an **assertion**, not a boot/selector error — a selector miss proves
+   nothing about the behavior.
+2. **Green** — write the minimum code to pass; run the browser. **The browser run is the receipt** —
+   attach the trace or console output, not just "it passed".
+3. **Refactor / graduate** — clean up; a kept E2E capability test graduates into `/evals` (same path
+   as unit — a drop in its grade signals breakage).
+
+See `reference/playwright-e2e.md` for the "drive it like a user" discipline and flakiness traps.
 
 ## Non-negotiables (leading words)
 
@@ -50,12 +68,14 @@ delete the spike and rebuild it test-first. Don't test-drive a `prototype/` thro
 
 ## Anti-patterns
 
-See `reference/tdd-antipatterns.md` — the vacuous test, testing the mock, the mega-test, and
-asserting on implementation detail. Name the smell; the name carries the fix.
+See `reference/tdd-antipatterns.md` — the vacuous test, testing the mock, the mega-test, asserting
+on implementation detail, and the three E2E smells (sleep-based wait, DOM-internals assertion,
+mega-journey test). Name the smell; the name carries the fix.
 
 ## Definition of done for a ticket
 
 - [ ] Every new behavior has a test that was seen to fail first, then pass
+- [ ] Every user-facing slice has a Playwright test seen to fail then pass; browser receipts attached
 - [ ] Whole suite green + typecheck clean (the on-edit `check` hook stays quiet)
 - [ ] Failing-then-passing receipts attached
 - [ ] Capability tests worth keeping promoted into the `/evals` suite
