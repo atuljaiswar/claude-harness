@@ -33,3 +33,18 @@ change the test only when the spec changed; otherwise the code is what's wrong.
 Test goes red because of an import error / typo, you fix the typo, it goes green — but the assertion
 never actually ran. **Fix:** read the red output; confirm it's an *assertion* failure before writing
 implementation.
+
+## The sleep-based wait
+Fixed `sleep`/timeout used to "wait for" the app to reach a state — flaky by construction because
+timing varies across machines and load. **Fix:** use web-first assertions / auto-wait on the visible
+outcome (`expect(locator).toBeVisible()`) so the test retries until true or times out with a clear message.
+
+## The DOM-internals assertion
+Asserting on CSS class names, element IDs, or internal call order instead of what the user actually
+sees and can do. Breaks on every visual refactor while behavior stays unchanged. **Fix:** assert
+visible text, ARIA role, or accessible state — what the browser's accessibility tree exposes.
+
+## The mega-journey test (E2E)
+One E2E test walking ten screens so a failure localizes nothing and any screen's flakiness fails the
+whole suite. **Fix:** one user-visible behavior per test; share setup (auth, seeded data) via
+fixtures, not one long sequential script.
