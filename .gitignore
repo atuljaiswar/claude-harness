@@ -8,3 +8,5 @@
 # and silently dropped the prototype skill from the template.
 /docs/
 /prototype/
+# Ephemeral TDD receipts — never commit (test-first gate reads these at runtime)
+.claude/state/
