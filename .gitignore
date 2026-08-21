@@ -1,5 +1,8 @@
 .claude/rules/stack/*.md
 !.claude/rules/stack/README.md
+# Playwright is a harness-level default (the E2E tool the testing-doctrine picks),
+# not a per-project generated stack rule — track it like README.md above.
+!.claude/rules/stack/playwright.md
 # Root-anchored: these are per-project throwaway/generated dirs at the repo root.
 # Without the leading slash, a bare `prototype/` also matched `.claude/skills/prototype/`
 # and silently dropped the prototype skill from the template.
