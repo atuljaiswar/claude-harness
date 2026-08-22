@@ -27,10 +27,28 @@ meaningful — do not leak the code.
 Also run the `security-reviewer` agent (SAST / dependency / secrets / authz) and the `researcher`
 agent for open technical questions.
 
+## Test-first audit (non-blind)
+
+This audit does **not** run inside blind Codex — Codex stays blind (contract docs only, never the
+code). The test-first audit is run by a **non-blind** reviewer (the `senior-reviewer` /
+`code-reviewer` agent) that reads `git log` and the diff.
+
+For each new implementation change, verify:
+
+1. **Test-first**: a covering test was committed in the same or an earlier commit — and was seen red
+   (the commit message or receipt confirms the failing run came before the green).
+2. **Non-vacuous**: the test contains real assertions — not always-true checks or missing asserts.
+   Cross-reference the "vacuous test" smell in
+   `.claude/skills/tdd/reference/tdd-antipatterns.md`.
+
+A violation (test-after, vacuous test, missing test) goes back to the maker for correction before
+the PR merges.
+
 ## Exit criteria
 
 - [ ] **Every BRD requirement ID has a corresponding passing test**
 - [ ] Security scan run and results **logged** in `docs/progress-log.md` (even deferred findings — never dropped)
+- [ ] **Test-first audit passed** — every new impl change has a non-vacuous test committed test-first
 
 ## Architecture-phase variant
 

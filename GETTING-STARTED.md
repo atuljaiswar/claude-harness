@@ -125,3 +125,14 @@ in Claude Code (not a parent folder), then restart the session.
 
 **I don't have Codex — does it still work?** Yes. Everything works with just Claude Code; the
 `/codex-check` step is the only Codex-specific one.
+
+**Claude says it can't edit a file until a test fails first?** That's the **test-first gate** working
+as intended. The harness makes Claude write a *failing* test for a new behavior before it writes the
+code — that's real TDD (the failing test proves the test actually checks something; then the code
+makes it pass). For a legit non-TDD edit (config tweak, quick experiment, emergency fix), run the
+command again with `TDD_BYPASS=1`.
+
+**Does it test in a real browser?** Yes, for user-facing flows. `/tdd` writes **Playwright** E2E tests
+that drive the app like a user (click, type, see the result) — so Claude confirms the feature actually
+works, not just that the logic passes. Needs a running app to point at (your project); nothing to set
+up in the harness itself.
