@@ -22,4 +22,13 @@ Before declaring done, sweep the edges: empty / one / many; invalid / boundary; 
 state transitions; failure paths; **access control**. Confirm the **role/access model** and the
 **data model** explicitly — these cause the most rework when assumed.
 
+## Escalate words → a drivable prototype when the model is risky
+
+Words are a weak gate for a model the user can't picture. When a decision survives grilling but is
+still **high-risk** — a non-trivial state machine, a multi-role / contested access model,
+concurrency or ordering that matters, or the user is **hedging** ("I think…") — don't settle it in
+prose. Run `/prototype` (LOGIC branch): a 10-minute drivable HTML demo the user *clicks through* to
+catch the wrong assumption before it's built. Don't prototype every requirement — reserve it for the
+few that would be expensive to get wrong (respects the time budget).
+
 Output when confirmed: a short bullet list of the settled decisions. Hand off to `/to-spec`.

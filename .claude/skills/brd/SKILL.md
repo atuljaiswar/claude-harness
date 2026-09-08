@@ -10,7 +10,10 @@ Grill-down every requirement into a Business Requirements Document.
 ## Steps
 
 1. Run the `/grill` procedure (relentless, one branch, one question at a time, recommend one, do not
-   act, facts-vs-decisions). Use the `requirements-analyst` agent to sweep edge cases.
+   act, facts-vs-decisions). Use the `requirements-analyst` agent to sweep edge cases. For any
+   **high-risk model** the sweep surfaces (contested role/access model, non-trivial state machine,
+   concurrency), validate it with a `/prototype` LOGIC demo the user drives — don't confirm it in a
+   text list alone. Fold the verdict back into this BRD against its requirement ID.
 2. Extract **every** requirement from the source material (transcripts, docs, client notes).
 3. Break requirements into: **functional, non-functional, edge cases, out-of-scope** (explicit).
 4. Write `docs/01-brd.md`. Add a **mermaid flowchart** of the user journey / core process.

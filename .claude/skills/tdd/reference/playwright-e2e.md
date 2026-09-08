@@ -14,6 +14,13 @@ outcomes — text on screen, enabled/disabled state, URL after navigation. Never
 classes, element IDs, or internal call counts. If you can't assert it through the browser's
 accessibility tree, the behavior may not be user-visible enough to warrant an E2E test.
 
+## Getting a valid first red (field-verified)
+
+Before the first E2E can produce a *meaningful* red, the app server must actually boot and serve a page — otherwise you get a red for the wrong reason and waste the loop:
+
+- **Pick an uncommon `webServer` port on `127.0.0.1`** (e.g. `4173`). A `:3000`/`:8080` conflict throws `EADDRINUSE`, a boot failure masquerading as a test failure. Treat any port/boot error as **NOT a valid red** — fix the infra, then re-run.
+- **Ensure a page loads at the base URL first.** Playwright waits for `webServer` to return a 2xx before running any test; with no `index.html` the server 404s and Playwright times out *before* your test. Add a bare page so the server is "ready," then the test fails for the right reason (feature missing). Config details in [`../../rules/stack/playwright.md`](../../rules/stack/playwright.md#webserver-setup-avoids-two-field-verified-failures).
+
 ## Flakiness traps
 
 - **Implicit waits / sleep** — fixed delays make tests time-dependent; use web-first assertions instead (they auto-retry).
