@@ -96,7 +96,7 @@ That's everything. You can stop reading here.
 - **Codex double-check:** if you have Codex installed, `/codex-check` has a second AI blind-test
   your code independently. (You already have this set up.)
 - **Memory:** Claude remembers project facts/decisions in `.claude/memory/`. After a bug, run
-  `/retro` so it learns and doesn't repeat it.
+  `/calibrate` (reactive mode) so it learns and doesn't repeat it.
 - **Full command list:** see [`USAGE.md`](USAGE.md).
 
 ---

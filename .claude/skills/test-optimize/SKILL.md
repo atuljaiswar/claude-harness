@@ -11,7 +11,7 @@ for where this loop sits.
 
 ## Add
 
-Cover gaps: behaviors found unguarded by `/retro` or escaped bugs. Graduate capability tests (unit
+Cover gaps: behaviors found unguarded by `/calibrate` or escaped bugs. Graduate capability tests (unit
 or E2E) that proved their value into `/evals` so the regression net grows intentionally.
 
 ## Purge
@@ -25,7 +25,7 @@ not a delete.
 Consolidate overlapping tests into one clear assertion. Split the mega-journey test into per-behavior
 tests sharing setup via fixtures. Kill duplication by merging; kill sprawl by splitting.
 
-**Boundary:** `/evals` *builds* the regression net; `/retro` fixes one escaped failure; this skill
+**Boundary:** `/evals` *builds* the regression net; `/calibrate` (reactive) fixes one escaped failure; this skill
 *grooms* the whole suite on a recurring cadence.
 
 **Done when:** suite is green-for-real, runs measurably faster, and has no known flakes.

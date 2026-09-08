@@ -46,7 +46,7 @@ approves. No auto-merge. Codex needs one-time setup — see
 ### B) Lightweight modular — trigger any skill, any order
 **Outer loop:** `/grill` → `/to-spec` → `/to-tickets`
 **Inner loop:** `/prime` → `/plan` → `/implement` (calls `/code-review`) → review → PR
-**Anytime:** `/evals`, `/write-skill`, `/retro`
+**Anytime:** `/evals`, `/write-skill`, `/calibrate`
 
 Every skill is independently triggerable; artifacts are plain editable markdown, so nothing is
 locked into a pipeline. Use B for small changes, A when you want the full gated record.
@@ -65,7 +65,7 @@ locked into a pipeline. Use B for small changes, A when you want the full gated 
 | `skills/benchmark` | Load-test the app against the NFR perf/scalability targets | NFR verification |
 | `skills/prime` | Load codebase context for the current ticket | Context Assembly |
 | `skills/write-skill` | Author/prune skills with the deletion test | Skill Authoring |
-| `skills/retro` | Harness-evolution loop: failure → infrastructure | Harness Engineering |
+| `skills/calibrate` | Harness-evolution loop: reactive fix + session sweep | Harness Engineering |
 | `skills/sdlc` | Orchestrates the full Phase 0-9 pipeline | SDLC Harness Prompt |
 | `skills/tooling-survey` | Phase 0 — survey + synthesize domain tools → `docs/00-tooling-survey.md` | SDLC Phase 0 |
 | `skills/brd` | Phase 1 — BRD with unique testable IDs + user-journey diagram | SDLC Phase 1 |
@@ -89,4 +89,4 @@ locked into a pipeline. Use B for small changes, A when you want the full gated 
 When the agent fails, don't only ask *"was the model good enough?"* — ask **which harness layer
 ran out of road**: missing instruction? wrong context? stale memory? vague tool schema? wrong
 environment? no durable state? no orchestration? should it have been delegated? no skill? no
-verification? no trace? learned nothing last time? Fix that layer, then `/retro` it in.
+verification? no trace? learned nothing last time? Fix that layer, then `/calibrate` (reactive mode) it in.

@@ -1,16 +1,44 @@
 ---
 name: calibrate
-description: End-of-session sweep — fold what was learned this session back into the harness (skills, CLAUDE.md, rules, memory), routed through a three-bucket risk gate. Use when wrapping up a working session, or after several corrections.
+description: Fold what you learned back into the harness so the same class of failure gets harder to repeat — two modes. REACTIVE (one failure → one durable fix); use after a bug, a bad run, or a repeated correction. SWEEP (whole-session review, many candidate fixes, risk-bucketed); use when wrapping up a working session.
 ---
 
 # calibrate
 
-The harness should get better every session, not just after failures. Where `/retro` converts **one
-failure** into **one** durable fix, `/calibrate` reviews the **whole session** and proposes **many**
-improvements at once — then gates each by risk so you approve only what matters. This is the
-self-improving loop; full-auto drifts, review-everything never gets done, so we **bucket**.
+The harness should compound — get better every session, not just after failures. Don't explain the
+incident, change the system. Two modes; pick by trigger:
 
-## Steps
+- **Reactive** — one concrete failure just happened → make **one** durable fix. Fast, in-the-moment.
+- **Sweep** — end of a working session → review the **whole** session, propose **many** fixes at
+  once, gated by risk so you approve only what matters. (Full-auto drifts; review-everything never
+  gets done — so we bucket.)
+
+---
+
+## Reactive mode — one failure → one fix
+
+### Diagnose: which layer ran out of road?
+
+Instruction · context · memory · tool schema · execution environment · durable state ·
+orchestration · delegation · skill · verification · trace · learning. Name the layer that failed.
+
+### Convert the failure into infrastructure
+
+| Failure | Fix |
+|---|---|
+| Repeated context miss | a retrieval/priming rule or a `facts.md` entry |
+| Bad tool result | a stricter schema / validation |
+| Dangerous command seen | a permission gate in `settings.json` |
+| Missed edge case | a new eval task / test |
+| Recurring correction | a memory (`decisions.md`) or a leading word in a skill |
+| Repeated workflow | a new skill (`/write-skill`) |
+
+Make exactly one durable change and note it in `.claude/memory/decisions.md`. The point isn't a
+perfect run once — it's that the next run starts from a better place.
+
+---
+
+## Sweep mode — whole session → many fixes, risk-bucketed
 
 1. **Review the session.** Read back the conversation for signal: repeated corrections, a workaround
    you had to explain twice, a preference you stated, a skill that under- or over-fired, a fact about
@@ -28,7 +56,7 @@ self-improving loop; full-auto drifts, review-everything never gets done, so we 
 6. **Summarize**: N auto-applied, M awaiting your sign-off, K need more context. Point at the review
    file. Stop — do **not** enact buckets 2/3 until Atul checks the boxes.
 
-## The three buckets
+### The three buckets
 
 | Bucket | Risk | Examples | Handling |
 |---|---|---|---|
@@ -38,12 +66,14 @@ self-improving loop; full-auto drifts, review-everything never gets done, so we 
 
 Bucket boundary = *would a wrong choice here degrade future output?* If yes, it's 2 or 3.
 
-## Guardrails
+---
+
+## Guardrails (both modes)
 
 - **One change, one home** — don't state the same fact in a skill *and* memory (single source of truth).
 - **Forgetting is hygiene** — on a conflict, update the current fact and mark the old superseded
   (see `.claude/memory/README.md`); never store two contradictory facts as equals.
 - **Compress feedback loops** — if you already fixed an output by hand this session, the skill that
   produced it is a prime bucket-2 candidate: "improve this skill based on what we just did."
-- Model-invocable is fine, but this is best **user-invoked at session end**; consider a routine only
-  after it's earned trust (see `/retro` for the reactive path).
+- Model-invocable is fine, but sweep mode is best **user-invoked at session end**; consider a routine
+  only after it's earned trust. Reactive mode is the in-the-moment path after a single failure.

@@ -21,7 +21,7 @@ Two ways to work. Pick per task; they share the same skills.
 | `/evals` | Stands up an outcome-graded eval suite (correctness + perf) | Want a regression net |
 | `/benchmark` | Load-tests the app vs the NFR perf/scale targets | Verify/enforce performance |
 | `/write-skill` | Author/prune a skill (deletion test) | Extending the harness |
-| `/retro` | Turn a failure into a rule/hook/test/skill | After a bug or bad run |
+| `/calibrate` | Fold learnings into the harness — reactive (one failure→one fix) or session sweep | After a bug/bad run, or at session end |
 | `/deploy` | Placeholder (planned-only) | Not active yet |
 
 Phase skills used by `/sdlc`: `/tooling-survey` `/brd` `/architecture` `/db-design`
@@ -84,7 +84,7 @@ Two enforcement layers keep it honest:
 
 - Put standing facts in `.claude/memory/facts.md`, decisions in `.claude/memory/decisions.md`.
 - The session-start hook loads their **index** each session (pointers, not full text).
-- Run `/retro` after a failure to write the lesson back in — the harness compounds over time.
+- Run `/calibrate` after a failure (reactive mode) to write the lesson back in — the harness compounds over time.
 
 ## Tips
 

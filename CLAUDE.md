@@ -31,8 +31,8 @@ not assumed from the model.
 - **Lightweight modular** — trigger any skill in any order for smaller work:
   - Plan a feature: `/grill` → `/to-spec` → `/to-tickets`
   - Build a ticket: `/prime` → `/plan` → `/implement` (test-first via `/tdd`, calls `/code-review`) → PR
-  - Anytime: `/tdd`, `/evals`, `/write-skill`, `/retro` (one failure → one fix), `/calibrate`
-    (session end → many improvements, bucketed)
+  - Anytime: `/tdd`, `/evals`, `/write-skill`, `/calibrate` (reactive: one failure → one fix;
+    sweep: session end → many improvements, bucketed)
 
 **SDLC docs layout** (created by the pipeline in the target repo): `docs/00-tooling-survey.md`,
 `docs/01-brd.md`, `docs/02-architecture.md`, `docs/adr/NNN-*.md`, `docs/03-database.md`,
@@ -68,4 +68,4 @@ memory *index*, not bodies; pull detail on demand.
 
 **When something fails,** ask which harness layer ran out of road (instruction / context / memory /
 tool / environment / durable-state / orchestration / delegation / skill / verification / trace /
-learning), fix that layer, and `/retro` it so the same class of failure gets harder to repeat.
+learning), fix that layer, and `/calibrate` (reactive mode) it so the same class of failure gets harder to repeat.

@@ -20,4 +20,4 @@ possible** and never let a hook gate read-only work or block on false positives.
 - Commands assume a **POSIX shell** (git bash on Windows). If your Claude Code runs hooks via
   PowerShell/cmd, port these to `.ps1` and update `settings.json`.
 - Keep hooks fast; they run often. If `check.sh` gets slow, scope it to the edited file's language.
-- Add a permission gate to `settings.json` (not a hook) when `/retro` flags a dangerous command.
+- Add a permission gate to `settings.json` (not a hook) when `/calibrate` flags a dangerous command.
