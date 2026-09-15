@@ -13,6 +13,11 @@ Review the diff in **fresh context** (don't trust the session that wrote it). Tw
 Then sweep for **refactoring smells** (see `reference/fowler-smells.md`) — name each one you find;
 the name carries the fix.
 
+Then sweep with the **`pragmatic-programmer`** skill's *Tells & smells* — coupling (Tell-Don't-Ask
+violations, train-wreck chains), programming-by-coincidence (works but nobody knows why), a name
+that no longer tells the truth, broken windows, unguarded shared state, refactor mixed with feature.
+Same idiom: name the smell, the name carries the fix.
+
 Then sweep for **performance smells** (see `reference/perf-smells.md`) — N+1 queries, missing
 indexes, unbounded/over-fetching queries, missing pagination, blocking I/O on the hot path. Static
 perf review here; `/benchmark` measures the running system against the NFR targets.

@@ -17,6 +17,9 @@ Decide the architecture as a **dual-agent** exercise. Never let one agent silent
    human lead for the final call.
 4. Every non-trivial decision (DB choice, framework, service boundary, auth strategy) gets an
    **ADR** at `docs/adr/NNN-title.md` — sections: **Context, Options Considered, Decision, Consequences**.
+   In **Consequences**, state the **reversibility cost**: how expensive is this to undo, and what
+   boundary keeps it reversible? (There are no final decisions — an irrevocable choice wired through
+   every file is the expensive kind; keep vendors/frameworks behind an interface.)
    (Mirror the decision into `.claude/memory/decisions.md` so the session-start hook surfaces it.)
 5. Write `docs/02-architecture.md` with a **C4 mermaid diagram** (context + container level).
 

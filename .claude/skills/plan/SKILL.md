@@ -14,6 +14,12 @@ Interview, research, then write a plan whose most important section is the **val
 2. **Research** the codebase for the exact files, seams, and docs involved.
 3. Write the plan to a markdown file using `reference/plan-template.md`.
 
+While shaping the approach, apply the **`pragmatic-programmer`** skill's decision rules: **ETC**
+("which option is easier to change?") as the tie-breaker between designs; **reversibility** — keep
+vendor/framework/irrevocable choices behind a boundary; and **find the box** — when a requirement
+feels impossible, list every constraint and challenge which are real vs. assumed before planning
+around it.
+
 ## Non-negotiable
 
 **Validation-first.** Define how you'll test **before** writing code — unit/integration tests,
