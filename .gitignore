@@ -10,3 +10,19 @@
 /prototype/
 # Ephemeral TDD receipts — never commit (test-first gate reads these at runtime)
 .claude/state/
+
+# --- Jev (TypeSafe decision model) layer ---
+# Live key lives here (settings.local.json), never committed; the .example is tracked.
+.claude/settings.local.json
+# Stray key drop from setup; the key belongs in settings.local.json only.
+/secrets.md
+# Jev per-call log (JEV_LOG target), if enabled.
+.claude/jev.log
+# Python bytecode cache from the Jev hooks.
+__pycache__/
+*.pyc
+# Playwright auth sessions used by the jev-browser-check skill — hold cookies.
+.playwright/
+# Upstream Jev resource pack download + its screenshot: vendored into .claude/ already.
+/jev-use-cases/
+/Screenshot*.png

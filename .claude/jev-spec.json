@@ -1,0 +1,9 @@
+{
+  "_about": "Spec docs whose rules jev-spec-check judges for test coverage (use case 2). NOT wired as a hook in this harness by default — it's a per-project tool: run the `jev-spec-check` skill manually, or add jev-spec-hook.py as a PostToolUse hook in settings.json once a project actually has a spec/access-matrix doc. 'spec' is a markdown file; every list item and table row in it is one rule. 'watch' is a regex on edited paths that would trigger the (optional) hook. 'tests' is a regex for test files (default covers tests/, __tests__/, *.test.*, *.spec.*, test_*.py). Replace the example below per project.",
+  "specs": [
+    {
+      "spec": "docs/PERMISSIONS.md",
+      "watch": "(^|/)(routes?|routers?|controllers?|api|middleware|auth)/"
+    }
+  ]
+}

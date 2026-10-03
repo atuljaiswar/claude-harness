@@ -1,0 +1,8 @@
+{
+  "$comment": "Template for .claude/settings.local.json (which is gitignored). Copy this to settings.local.json and paste your own key. This harness uses TypeSafe's NATIVE System One endpoint with a native key (apikey_...), not the Vercel AI Gateway. Get a key from TypeSafe; Jev is also on OpenRouter / Vercel AI Gateway (jev.py falls back to AI_GATEWAY_API_KEY and you'd set JEV_URL to the gateway's /v1/evaluate). Every Jev hook fails open: with no key set, the hooks do nothing and Claude carries on.",
+  "env": {
+    "TYPESAFE_API_KEY": "<your TypeSafe native key, apikey_...>",
+    "JEV_URL": "https://api.typesafe.ai/v1/systemone",
+    "JEV_MODEL": "jev-latest"
+  }
+}

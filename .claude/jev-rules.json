@@ -1,0 +1,31 @@
+{
+  "_about": "Hard, always-enforced rules that jev-rules.py checks before every edit or commit (use case 7). These are the subset of .claude/rules/coding-standards.md that a reviewer can judge from a single diff. Rules the model should follow *most* of the time stay in coding-standards.md (read at review time); the 'never do X' ones live here so they're enforced *every* time. 'on' is 'edit' or 'commit'. 'paths' (edit rules) is a regex on the edited file's project-relative path; omit it to apply everywhere. 'source' is quoted when an edit is blocked. Add project-specific rules here when a project is scaffolded.",
+  "rules": [
+    {
+      "id": "no-secrets-in-code",
+      "on": "edit",
+      "rule": "No secrets in code: never hardcode API keys, tokens, passwords, or private keys in source files. Config and secrets come from the environment only.",
+      "source": "coding-standards.md - No secrets in code"
+    },
+    {
+      "id": "no-secrets-staged",
+      "on": "commit",
+      "rule": "No secrets may be committed: no .env files, no real API keys, passwords, or service keys in the staged diff. .env.example / *.example files hold placeholders only.",
+      "source": "coding-standards.md - No secrets in code"
+    },
+    {
+      "id": "no-db-from-frontend",
+      "on": "edit",
+      "paths": "(^|/)(components|pages|app|views|client|frontend|web|ui)/",
+      "rule": "Decoupled by default: frontend code never talks to the database directly (no DB clients, SQL, or direct table reads/writes from the browser). All data goes through the backend API.",
+      "source": "coding-standards.md - Decoupled by default / guard the boundaries"
+    },
+    {
+      "id": "authz-on-server",
+      "on": "edit",
+      "paths": "(^|/)(routes?|routers?|controllers?|api|handlers?|middleware|auth)/",
+      "rule": "Guard the boundaries: every endpoint that reads or changes user data checks on the server that the caller is allowed to, and never trusts a user id or role sent by the client.",
+      "source": "coding-standards.md - Guard the boundaries"
+    }
+  ]
+}
