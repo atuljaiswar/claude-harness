@@ -34,9 +34,13 @@ in the harness. CI runs the same script headless (`CI=1`/`HEADLESS=1`).
 
 ## The run
 
-First time in a project: if `scripts/test-report.mjs` + the `test:report` npm script don't exist yet,
-**scaffold them** from `reference/test-report.mjs` (and the seed step from `reference/test-data-seed.md`),
-commit them — now the project owns the flow. Every run after that is just:
+First time in a project, **scaffold the per-project pieces from this skill's `reference/` and commit
+them** — now the project owns the whole flow (harness-independent):
+- `docs/requirements/registry.md` ← `reference/registry-template.md`
+- `scripts/test-report.mjs` + a `"test:report"` npm script ← `reference/test-report.mjs`
+- `tests/seed/*.json` + a `"seed:test"` npm script ← `reference/test-data-seed.md`
+
+Every run after that is just:
 
 ```bash
 npm run test:report      # seed → full HEADED run (watch it) → join → write the one-pager
