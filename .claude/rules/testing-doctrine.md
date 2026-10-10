@@ -54,4 +54,12 @@ This is the "watch it tested live *and* prove old features still pass" artifact 
 can't give you. See [`../skills/test-report/SKILL.md`](../skills/test-report/SKILL.md) and its
 `reference/test-data-seed.md`.
 
+**Harness-independent.** The deterministic guts live as a **committed project script**
+(`scripts/test-report.mjs`, run as `npm run test:report`), scaffolded from the skill's
+`reference/test-report.mjs`. The registry, REQ-tags, seed fixtures, and that script all live in the
+**project** repo — so the whole flow runs for anyone who clones it, with **no claude-harness and no
+Claude Code** (a teammate or CI just runs `npm run test:report`, headless via `CI=1`). The skill is
+only a convenience wrapper that runs it headed and narrates. Guts in the project, wrapper in the
+harness — the proof never depends on who has the harness.
+
 **Definition of covered:** a requirement is *covered* when at least one test tagged with its ID exists **and passed in the latest run**. A tagged-but-failing requirement counts as a regression, not coverage. An untagged requirement is a traceability gap the report surfaces by name.

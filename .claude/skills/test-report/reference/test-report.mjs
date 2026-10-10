@@ -1,0 +1,130 @@
+#!/usr/bin/env node
+/**
+ * test-report.mjs — the portable, harness-independent guts of /test-report.
+ *
+ * This file is SCAFFOLDED INTO EACH PROJECT (committed there, wired as `npm run test:report`).
+ * Once it lives in the project repo it runs for ANYONE who clones the project — no claude-harness,
+ * no Claude Code required. The /test-report skill is just a thin wrapper that calls it (headed) and
+ * narrates; CI / a plain developer runs `npm run test:report` directly.
+ *
+ * It does, in one pass:
+ *   1. seed reproducible data   (npm run seed:test)        — skip with --no-seed
+ *   2. run the full suite        (vitest + playwright)       — skip with --no-run (re-report only)
+ *      headed & 1-worker by default; HEADLESS=1 (or CI) flips to headless for unattended runs
+ *   3. join registry ↔ REQ-tags on test titles
+ *   4. write docs/reports/test-report.md + print the headline
+ *
+ * Zero runtime deps — Node stdlib only. No Python, no content-hash (git versions the registry).
+ */
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+
+const args = new Set(process.argv.slice(2));
+const headless = process.env.CI || process.env.HEADLESS === '1';
+const STATE = '.claude/state/test-report';
+const REGISTRY = 'docs/requirements/registry.md';
+const OUT = 'docs/reports/test-report.md';
+mkdirSync(STATE, { recursive: true });
+
+const sh = (cmd, a) => spawnSync(cmd, a, { stdio: 'inherit', shell: process.platform === 'win32' });
+
+// 1. SEED ------------------------------------------------------------------------------------------
+if (!args.has('--no-seed')) {
+  console.log('• seeding test data (npm run seed:test)…');
+  const r = sh('npm', ['run', 'seed:test']);
+  if (r.status !== 0) console.warn('  ! seed step missing or failed — see reference/test-data-seed.md');
+}
+
+// 2. RUN (full suite; headed so it is watched, unless CI/HEADLESS) ----------------------------------
+if (!args.has('--no-run')) {
+  console.log(`• running FULL suite ${headless ? '(headless)' : '(HEADED — watch the browser)'}…`);
+  sh('npx', ['vitest', 'run', '--reporter=json', `--outputFile=${STATE}/unit.json`]);
+  const pw = ['playwright', 'test', '--reporter=json'];
+  if (!headless) pw.push('--headed', '--workers=1');
+  const r = sh('npx', pw);
+  // playwright --reporter=json prints to stdout; capture separately if stdio wasn't a file
+  if (r.stdout) writeFileSync(`${STATE}/e2e.json`, r.stdout);
+}
+
+// 3. GATHER test (title,status) pairs from both runners --------------------------------------------
+const tests = []; // { title, ok }
+const readJSON = (p) => { try { return JSON.parse(readFileSync(p, 'utf8')); } catch { return null; } };
+
+const unit = readJSON(`${STATE}/unit.json`);
+for (const f of unit?.testResults ?? [])
+  for (const a of f.assertionResults ?? [])
+    tests.push({ title: a.fullName || a.title, ok: a.status === 'passed' });
+
+const e2e = readJSON(`${STATE}/e2e.json`);
+const walk = (s) => {
+  for (const spec of s.specs ?? []) tests.push({ title: spec.title, ok: spec.ok === true });
+  for (const child of s.suites ?? []) walk(child);
+};
+for (const s of e2e?.suites ?? []) walk(s);
+
+// map REQ-ID -> {covered, failing}
+const tagRe = /\[(REQ-[A-Z]+-\d+)\]/g;
+const byReq = new Map();
+const seenTags = new Set();
+for (const t of tests) {
+  for (const m of t.title.matchAll(tagRe)) {
+    const id = m[1]; seenTags.add(id);
+    const e = byReq.get(id) ?? { pass: 0, fail: 0 };
+    t.ok ? e.pass++ : e.fail++;
+    byReq.set(id, e);
+  }
+}
+
+// 4. READ registry (active rows) -------------------------------------------------------------------
+const reg = []; // { id, module, text, priority, added }
+if (existsSync(REGISTRY)) {
+  for (const line of readFileSync(REGISTRY, 'utf8').split('\n')) {
+    const m = line.match(/^\|\s*(REQ-[A-Z]+-\d+)\s*\|([^|]*)\|([^|]*)\|([^|]*)\|([^|]*)\|([^|]*)\|/);
+    if (m && m[6].trim().toLowerCase() === 'active')
+      reg.push({ id: m[1], module: m[2].trim(), text: m[3].trim(), priority: m[4].trim(), added: m[5].trim() });
+  }
+} else {
+  console.error(`! ${REGISTRY} not found — nothing to join against.`); process.exit(1);
+}
+
+// 5. CLASSIFY --------------------------------------------------------------------------------------
+const covered = [], regressed = [], gaps = [];
+for (const r of reg) {
+  const e = byReq.get(r.id);
+  if (!e) gaps.push(r);
+  else if (e.fail > 0) regressed.push(r);
+  else covered.push(r);
+}
+const orphans = [...seenTags].filter((id) => !reg.some((r) => r.id === id));
+const totalTests = tests.length, passTests = tests.filter((t) => t.ok).length;
+const pct = reg.length ? Math.round((covered.length / reg.length) * 100) : 0;
+
+// 6. WRITE one-pager -------------------------------------------------------------------------------
+const row = (r) => `| ${r.id} | ${r.text} | ${r.priority} |`;
+const today = new Date().toISOString().slice(0, 10);
+const md = `# Test Report — ${today}
+
+_Generated by \`npm run test:report\` from ${REGISTRY} + [REQ-*] test tags + the latest run._
+
+## Headline
+
+| Metric | Value |
+|--------|-------|
+| Requirement coverage | ${covered.length} / ${reg.length} active (${pct}%) |
+| Test pass-rate | ${passTests} / ${totalTests} |
+| **Regressions caught** | **${regressed.length}** |
+| Traceability gaps | ${gaps.length} |
+
+## Regressions (were passing, now failing) — ACT ON THESE
+${regressed.length ? regressed.map((r) => `- **${r.id}** — ${r.text}`).join('\n') : 'None.'}
+
+## Gaps (requirements with no passing test) — NEEDS /tdd
+${gaps.length ? '| REQ-ID | Requirement | Priority |\n|--------|-------------|----------|\n' + gaps.sort((a, b) => a.priority.localeCompare(b.priority)).map(row).join('\n') : 'None.'}
+
+## Orphan tags (test references an unknown/inactive REQ-ID)
+${orphans.length ? orphans.map((id) => `- ${id}`).join('\n') : 'None.'}
+`;
+mkdirSync('docs/reports', { recursive: true });
+writeFileSync(OUT, md);
+console.log(`\n✓ ${OUT} written — coverage ${pct}% · ${passTests}/${totalTests} tests · ${regressed.length} regressions · ${gaps.length} gaps`);
+if (regressed.length) process.exit(1); // CI-friendly: regressions fail the build

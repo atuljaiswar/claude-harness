@@ -17,11 +17,33 @@ The **single front door** for verification. You run one thing; it gives you ever
 It does not write tests (that's `/tdd`) — it **runs and proves**. One invocation, four outcomes above.
 Read `.claude/rules/testing-doctrine.md` § Traceability & reporting first.
 
+## Harness-independent by design (important)
+
+The deterministic guts — seed → full run → join → report — live as a **committed project script**
+(`scripts/test-report.mjs`, wired as `npm run test:report`), scaffolded from
+[`reference/test-report.mjs`](reference/test-report.mjs). That means the **whole flow runs for anyone
+who clones the project — no claude-harness, no Claude Code needed**: a teammate or CI just runs
+`npm run test:report`. This skill is only a thin, nice wrapper that calls that script **headed** so a
+human watches, and narrates the result. Everything the flow depends on (registry, REQ-tags, seed
+fixtures, the script) is in the **project** repo and travels with it; only the convenience wrapper is
+in the harness. CI runs the same script headless (`CI=1`/`HEADLESS=1`).
+
 > Prerequisite: tests exist and carry `[REQ-xxx]` title tags (written by `/tdd`), requirements are in
 > `docs/requirements/registry.md`, and the project exposes a **test-seed step** (see step 1). If there
 > are no tagged tests yet, there is nothing to run — build a slice with `/tdd` first.
 
-## The run (one pass, top to bottom)
+## The run
+
+First time in a project: if `scripts/test-report.mjs` + the `test:report` npm script don't exist yet,
+**scaffold them** from `reference/test-report.mjs` (and the seed step from `reference/test-data-seed.md`),
+commit them — now the project owns the flow. Every run after that is just:
+
+```bash
+npm run test:report      # seed → full HEADED run (watch it) → join → write the one-pager
+```
+
+The skill runs exactly that (headed), then narrates the headline. The steps below are what the script
+does, in order — the same whether a human, CI, or Claude kicks it off.
 
 ### 1. Seed reproducible test data
 Reset the test database to a known, version-controlled seed so the run is repeatable and you can see

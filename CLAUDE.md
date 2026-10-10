@@ -42,8 +42,10 @@ stable `REQ-<MODULE>-<NN>` IDs in `docs/requirements/registry.md` (seeded at `/t
 covers the whole testing experience in a single run: seed reproducible data (`tests/seed/*.json`) →
 run the full Playwright suite **headed/UI** so you watch the browser click through → old tests re-run
 live (regression) → management one-pager (coverage %, pass-rate, new-since-release, regressions
-caught, data seeded). Git does the versioning — no content-hash, no Python. See
-`.claude/rules/testing-doctrine.md` § Traceability & reporting.
+caught, data seeded). Git does the versioning — no content-hash, no Python. **Harness-independent:**
+the guts are a committed project script (`scripts/test-report.mjs` → `npm run test:report`), so the
+whole flow runs for anyone who clones the project with no harness/Claude (CI runs it headless); the
+skill is just a headed wrapper. See `.claude/rules/testing-doctrine.md` § Traceability & reporting.
 
 **SDLC docs layout** (created by the pipeline in the target repo): `docs/00-tooling-survey.md`,
 `docs/01-brd.md`, `docs/02-architecture.md`, `docs/adr/NNN-*.md`, `docs/03-database.md`,
