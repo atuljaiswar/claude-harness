@@ -44,6 +44,14 @@ The pyramid above proves *tests pass*. This layer proves *which requirement each
 
 One test may carry several tags (`[REQ-ENQ-01][REQ-ENQ-03]`); one requirement may be covered by many tests. Tags are written by the normal `/tdd` flow — **no new test-writing tool**. The bracket prefix is the entire contract: `/test-report` discovers coverage by scanning test titles, so the tag is both documentation and the machine-readable link.
 
-**The report.** `/test-report` reads the registry + the REQ-tags across the suite + the latest run results and emits a management one-pager: **coverage %** (requirements with ≥1 passing test), **pass-rate**, **new-since-last-release**, and **regressions caught**. This is the "prove to the team that old features still pass" artifact — the piece a plain green suite can't give you. See [`../skills/test-report/SKILL.md`](../skills/test-report/SKILL.md).
+**The report / the one command.** `/test-report` is the **single verification front door** — one
+invocation does the whole thing: (1) seeds reproducible test data (`npm run seed:test` from committed
+`tests/seed/*.json`), (2) runs the **full** suite **headed/UI** so you watch the browser drive the app
+live, (3) because it runs the whole suite, every *old* test re-runs on screen — that is the live
+regression check, and (4) emits a management one-pager: **coverage %** (requirements with ≥1 passing
+test), **pass-rate**, **new-since-last-release**, **regressions caught**, plus what data was seeded.
+This is the "watch it tested live *and* prove old features still pass" artifact a plain green suite
+can't give you. See [`../skills/test-report/SKILL.md`](../skills/test-report/SKILL.md) and its
+`reference/test-data-seed.md`.
 
 **Definition of covered:** a requirement is *covered* when at least one test tagged with its ID exists **and passed in the latest run**. A tagged-but-failing requirement counts as a regression, not coverage. An untagged requirement is a traceability gap the report surfaces by name.

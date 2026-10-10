@@ -1,78 +1,91 @@
 ---
 name: test-report
-description: Generate a management-facing coverage/regression one-pager from the requirement registry + REQ-tagged tests + the latest test run. Use when someone needs proof that requirements are tested and old features still pass (release sign-off, status to team/management).
+description: One command that does the whole verification run — seeds reproducible test data, runs the FULL suite live in a visible browser (Playwright headed/UI so you watch it click through), re-runs every old test to prove new work broke nothing, and writes a management coverage/regression one-pager. Use whenever you want to see the app tested live and get proof that requirements are covered and old features still pass.
 ---
 
 # test-report
 
-Turns the testing pyramid's raw green/red into a **requirement-level** answer: *how much of what we
-promised is tested, and did anything that used to pass break?* It joins three things that already
-exist — the [requirement registry](../../../docs/requirements/registry.md), the `[REQ-*]` tags in
-test titles, and the latest run results — and writes a one-pager. It **writes no tests and changes
-no code**; it only reports. Read `.claude/rules/testing-doctrine.md` § Traceability & reporting first.
+The **single front door** for verification. You run one thing; it gives you everything:
 
-> Prerequisite: requirements have REQ-IDs in the registry (seeded at `/to-spec`→`/to-tickets`) and
-> tests carry `[REQ-xxx]` title prefixes (written by the normal `/tdd` flow). No tags, no report —
-> if coverage is near-zero, the fix is to tag tests, not to touch this skill.
+1. **Test data** — seeds reproducible, inspectable data so every run starts from the same known state.
+2. **Live browser** — runs the full Playwright suite **headed** (browsers open on screen, you watch
+   each test click through the app) — not invisible/headless.
+3. **Regression proof** — it runs the **whole** suite, so every *old* test re-runs in front of you;
+   anything the new feature broke is caught and named.
+4. **The paper** — a management one-pager: coverage %, pass-rate, new-since-release, regressions caught.
 
-## The loop
+It does not write tests (that's `/tdd`) — it **runs and proves**. One invocation, four outcomes above.
+Read `.claude/rules/testing-doctrine.md` § Traceability & reporting first.
 
-1. **Run the suite, capture machine-readable results.** Use the project's own runners with a JSON
-   reporter so pass/fail is parseable, not scraped from console text:
-   - unit (Vitest): `npx vitest run --reporter=json --outputFile=.claude/state/test-report/unit.json`
-   - unit (Jest): `npx jest --json --outputFile=.claude/state/test-report/unit.json`
-   - E2E (Playwright-TS): `npx playwright test --reporter=json > .claude/state/test-report/e2e.json`
+> Prerequisite: tests exist and carry `[REQ-xxx]` title tags (written by `/tdd`), requirements are in
+> `docs/requirements/registry.md`, and the project exposes a **test-seed step** (see step 1). If there
+> are no tagged tests yet, there is nothing to run — build a slice with `/tdd` first.
 
-   Match whatever the repo actually uses — the only requirement is *structured* output with each
-   test's **title** and **status**. If a runner can't emit JSON, fall back to its JUnit/XML reporter.
+## The run (one pass, top to bottom)
 
-2. **Extract REQ-tags from every test title.** A title may carry several: `[REQ-ENQ-01][REQ-ENQ-03]`.
-   Build a map `REQ-ID → [{title, status}]` across both unit and E2E results.
+### 1. Seed reproducible test data
+Reset the test database to a known, version-controlled seed so the run is repeatable and you can see
+exactly what data each test used. The project exposes this as **`npm run seed:test`** (convention),
+backed by committed fixtures under **`tests/seed/<module>.json`** (or a Playwright `globalSetup` that
+loads them). The skill runs the seed step first, then reports the seeded rows in the one-pager's
+"Test data" section so the data is never a mystery. If a project has no seed step yet, scaffold one
+from `reference/test-data-seed.md` before the first run.
 
-3. **Join against the registry.** Read `docs/requirements/registry.md`. For each **active** row:
-   - **Covered** — ≥1 tagged test exists *and* its latest status is passing.
-   - **Regression** — ≥1 tagged test exists but at least one is failing.
-   - **Gap** — no test carries its ID at all.
-   Flag **orphan tags** too: a `[REQ-*]` in a test title with no matching active registry row (stale
-   ID, typo, or a deprecated requirement still being tested).
+### 2. Run the FULL suite — live, in a visible browser
+Run everything (old + new), headed, with a JSON reporter so results are both **watchable** and
+**parseable**:
 
-4. **Diff against the last report** for "new since last release". Read the previous
-   `docs/reports/test-report.md` if it exists; a requirement whose `Added` version is newer than the
-   last report's — or any REQ-ID absent from the previous report — is *new this cycle*.
+```bash
+# unit — fast, captured for the report
+npx vitest run --reporter=json --outputFile=.claude/state/test-report/unit.json
 
-5. **Write the one-pager** to `docs/reports/test-report.md` (overwrite; git keeps the history, so each
-   release's report is one commit). Follow the exact format in
-   [`reference/report-format.md`](reference/report-format.md).
+# E2E — VISIBLE browser, you watch every test click through; JSON captured too
+npx playwright test --headed --reporter=json > .claude/state/test-report/e2e.json
+#   • prefer `--ui` for an interactive panel (time-travel, re-run a single test, pause)
+#   • add `--trace on` so every step is replayable afterwards via `npx playwright show-trace`
+#   • use `--workers=1` so tests open one at a time and are easy to follow by eye
+```
 
-6. **Report the headline in chat**: coverage %, pass-rate, regression count, gap count — one line, so
-   Atul sees the verdict without opening the file.
+Match whatever runners the repo actually uses; the only requirement is structured output with each
+test's **title** and **status**. Because this runs the *whole* suite, the old tests re-execute on
+screen — that *is* the live regression check.
 
-## Metrics (definitions — keep these stable)
+### 3. Join requirements → tests (the traceability)
+Extract `[REQ-*]` tags from every test title (a title may carry several: `[REQ-ENQ-01][REQ-ENQ-03]`),
+then join against `docs/requirements/registry.md`. For each **active** requirement:
+- **Covered** — ≥1 tagged test exists *and* passed.
+- **Regression** — ≥1 tagged test exists but is now failing (a feature that used to work).
+- **Gap** — no test carries its ID.
+Also flag **orphan tags** (a `[REQ-*]` with no matching active row — stale ID or typo).
 
-- **Coverage %** = active requirements *covered* ÷ total active requirements. (A tagged-but-failing
-  requirement is **not** covered — it's a regression.)
-- **Pass-rate** = passing tests ÷ total tests run. (Test-level, not requirement-level — the two differ
-  and the report shows both on purpose.)
-- **New since last release** = active requirements whose `Added` version post-dates the previous
-  report, or that the previous report didn't list.
-- **Regressions caught** = requirements that were covered in the previous report and now have a
-  failing tagged test. This is the number management actually cares about.
+### 4. Write the one-pager + say the headline
+Overwrite `docs/reports/test-report.md` using the exact shape in
+[`reference/report-format.md`](reference/report-format.md) — including the **Test data** section from
+step 1 and the **Regressions** section up top. Then in chat, one line: coverage %, pass-rate,
+regression count, gap count — so the verdict is visible without opening the file.
+
+## Metrics (keep these definitions stable)
+
+- **Coverage %** = active requirements *covered* ÷ total active. (Tagged-but-failing ≠ covered — it's a regression.)
+- **Pass-rate** = passing tests ÷ total run (test-level; shown alongside coverage, they differ on purpose).
+- **New since last release** = active requirements whose `Added` version post-dates the previous report.
+- **Regressions caught** = requirements covered in the previous report that now have a failing tagged test.
 
 ## Non-negotiables
 
-- **Report reality, never massage it.** A gap is a gap; a regression is a regression. The value of
-  this artifact is that it's trusted — one cooked number kills it.
-- **Don't invent coverage.** If a requirement has no tagged test, it is a gap even if "obviously" the
-  app does it. Coverage means a test asserts it, nothing less.
-- **Deterministic join.** Same registry + same run results → same report. The AI formats and
-  narrates; the pass/fail and the join are read straight from structured output, never guessed.
-- **Read-only on code and tests.** This skill never edits a test to make a number look better. If
-  coverage is low, it says so and points at which requirements need `/tdd`.
+- **Live and visible by default.** The E2E run is headed/UI, one worker, so Atul actually watches the
+  browser drive the app. A silent headless run defeats the point — headless is only for unattended CI.
+- **Reproducible data, shown.** Same seed → same run. The report states what data was seeded; test
+  data is never invisible or guessed.
+- **Whole suite, every time.** The regression guarantee ("old features still pass") only holds if the
+  *full* suite runs — never report on a subset.
+- **Report reality, never massage it.** A gap is a gap; a regression is a regression. Read-only on
+  code and tests — this skill never edits a test to make a number look better.
+- **Deterministic join.** Same registry + same results → same report. The AI formats and narrates;
+  pass/fail and the join are read from structured output, never invented.
 
 ## When to run it
 
-- **Release sign-off** — before you tell the team/management a release is safe.
-- **End of a module** — e.g. after Enquiry's tickets are all green, to show the module is covered.
-- **Regression check** — any time you need to prove old features still pass after new work.
-- **Not every commit** — `/tdd` + the `check` hook already guard per-edit; this is the periodic,
-  stakeholder-facing roll-up, not an inner-loop gate.
+Release sign-off; end of a module (e.g. after Enquiry's tickets are green — your first real run);
+any "did I break old features?" moment. Not per-commit — `/tdd` + the `check` hook already guard
+per-edit; this is the periodic, watch-it-live, stakeholder-facing roll-up.

@@ -33,13 +33,17 @@ not assumed from the model.
   - Build a ticket: `/prime` → `/plan` → `/implement` (test-first via `/tdd`, calls `/code-review`) → PR
   - Anytime: `/tdd`, `/evals`, `/write-skill`, `/calibrate` (reactive: one failure → one fix;
     sweep: session end → many improvements, bucketed)
-  - Prove coverage: `/test-report` — requirement→test traceability roll-up for release sign-off
+  - Verify + prove, one command: `/test-report` — seeds data, runs the full suite **live/headed**,
+    re-runs old tests on screen (regression), and writes the coverage/regression one-pager
 
-**Traceability (additive, no runtime change):** requirements get stable `REQ-<MODULE>-<NN>` IDs in
-`docs/requirements/registry.md` (seeded at `/to-spec`→`/to-tickets`); `/tdd` tags each test title
-with its REQ-ID (`[REQ-ENQ-01] …`); `/test-report` joins registry + tags + latest run into a
-management one-pager (coverage %, pass-rate, new-since-release, regressions caught). Git does the
-versioning — no content-hash. See `.claude/rules/testing-doctrine.md` § Traceability & reporting.
+**Traceability + the one verification command (additive, no test-writing change):** requirements get
+stable `REQ-<MODULE>-<NN>` IDs in `docs/requirements/registry.md` (seeded at `/to-spec`→`/to-tickets`);
+`/tdd` tags each test title with its REQ-ID (`[REQ-ENQ-01] …`). Then **one** skill, `/test-report`,
+covers the whole testing experience in a single run: seed reproducible data (`tests/seed/*.json`) →
+run the full Playwright suite **headed/UI** so you watch the browser click through → old tests re-run
+live (regression) → management one-pager (coverage %, pass-rate, new-since-release, regressions
+caught, data seeded). Git does the versioning — no content-hash, no Python. See
+`.claude/rules/testing-doctrine.md` § Traceability & reporting.
 
 **SDLC docs layout** (created by the pipeline in the target repo): `docs/00-tooling-survey.md`,
 `docs/01-brd.md`, `docs/02-architecture.md`, `docs/adr/NNN-*.md`, `docs/03-database.md`,
